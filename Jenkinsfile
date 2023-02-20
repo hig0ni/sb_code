@@ -8,6 +8,7 @@ pipeline {
     gitName = 'hig0ni'
     gitEmail = 'rjsgml658@naver.com'
     githubCredential = 'git_cre'
+    dockerHubRegistry = 'hig0ni/sbimage'
   }
   stages {
     stage('Checkout Github') {
@@ -23,7 +24,6 @@ pipeline {
         }
       }
     }
-
     stage('Maven Build') {
       steps {
           sh 'mvn clean install'
@@ -33,7 +33,20 @@ pipeline {
             echo 'Maven jar build failure'
         }
         success {
-            echo 'Repository clone success'
+            echo 'Maven jar build success'
+        }
+      }
+    }
+    stage('Docker Image Build') {
+      steps {
+          sh "docker build -t ${dockerHubRegistry}:${currentBuild.number} ."
+      }
+      post {
+        failure {
+            echo 'Docker image build failure'
+        }
+        success {
+            echo 'Docker image build success'
         }
       }
     }
