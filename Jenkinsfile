@@ -1,4 +1,4 @@
-]pipeline {
+pipeline {
   agent any
   // any, none, label, node, docker, dockerfile, kubernetes
   tools {
