@@ -7,13 +7,21 @@ pipeline {
   environment {
     gitName = 'hig0ni'
     gitEmail = 'rjsgml658@naver.com'
+    githubCredential = 'git_cre'
   }
   stages {
-    stage('Example') {
+    stage('Checkout Github') {
       steps {
-        echo 'Hello World'
+            checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: githubCredential, 'https://github.com/hig0ni/sb_code.git']]])
+      }
+      post {
+        failure {
+            echo 'Repository clone failure'
         }
+        success {
+            echo 'Repository clone success'
+        }
+      }
     }
   }
 }
-
