@@ -51,7 +51,7 @@ pipeline {
             echo 'Docker Image Build failure'
         }
         success {
-            echo 'Docker Image Build success'
+            echo 'Docker Im age Build success'
         }
       }
     }
@@ -76,6 +76,20 @@ pipeline {
           echo 'Docker Image Push success'
           sh "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
           sh "docker rmi ${dockerHubRegistry}:latest"
+        }
+      }
+    }
+    stage('Docker Container Deploy') {
+      steps {
+          sh "docker rm -f spring"
+          sh "docker run -dp 7979:8085 --name spring ${dockerHubRegistry}:${currentBuild.number}"
+      }
+      post {
+        failure {
+            echo 'Container Deploy failure'
+        }
+        success {
+            echo 'Container Deploy success'
         }
       }
     }
